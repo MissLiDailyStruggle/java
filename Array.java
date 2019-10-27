@@ -1,42 +1,128 @@
-
 public class Array<E> {
 	private E[] data;
 	private int size;
 	
-	//¹¹Ôìº¯Êý
+	//ï¿½ï¿½ï¿½ìº¯ï¿½ï¿½
 	public Array(int capacity) {
 		data = (E[])new Object[capacity];
 		size = 0;
 	}
-	//ÎÞ²ÎÊýµÄ¹¹Ôìº¯Êý
+	//ï¿½Þ²ï¿½ï¿½ï¿½ï¿½Ä¹ï¿½ï¿½ìº¯ï¿½ï¿½
 	public Array() {
 		this(10);
 	}
-	//»ñÈ¡Êý×éµÄÈÝÁ¿
+	//ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	public int getCapacity() {
 		return data.length;
 	}
-	//»ñÈ¡Êý×éÖÐµÄÔªËØ¸öÊý
+	//ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½Ôªï¿½Ø¸ï¿½ï¿½ï¿½
 	public int getSize() {
 		return size;
 	}
-	//·µ»ØÊý×éÊÇ·ñÎª¿Õ
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½Îªï¿½ï¿½
 	public boolean isEmpty() {
 		return size == 0;
 	}
-	//ÔÚindexË÷ÒýµÄÎ»ÖÃ²åÈëÒ»¸öÐÂµÄÔªËØ
+	//ï¿½ï¿½indexï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½Ã²ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Âµï¿½Ôªï¿½ï¿½
 	public void add(int index,E e) {
+		if(index < 0 || index > size)
+			throw new IllegalArgumentException("Add failed");
 		if(size == data.length)
-			throw new IllegalArgumentException("Add failed");
-		if(index < 0 || index >size)
-			throw new IllegalArgumentException("Add failed");
+			resize(2*data.length);
 		for(int i =size - 1;i >= index;i--)
-			data[index] = e;
+			data[i+1] = data[i];
+		data[index] = e;
 		size++;
 	}
-	//ÔÚËùÓÐÔªËØºóÌí¼ÓÒ»¸öÐÂÔªËØ
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ôªï¿½Øºï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Ôªï¿½ï¿½
 	public void addLast(E e) {
 		add(size,e);
 	}
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ôªï¿½ï¿½Ç°ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Ôªï¿½ï¿½
+	public void addFirst( E e) {
+		add(0,e);
+	}
+	//ï¿½ï¿½ï¿½indexï¿½ï¿½ï¿½ï¿½Î»ï¿½Ãµï¿½Ôªï¿½ï¿½
+	public E get(int index) {
+		if(index < 0 || index >= size)
+			throw new IllegalArgumentException("Get failed. Index is Illegal.");
+		return data[index];
+	}
+	public E getLast() {
+		return get(size - 1);
+	}
+	public E getFirst() {
+		return get(0);
+	}
+	//ï¿½Þ¸ï¿½indexï¿½ï¿½ï¿½ï¿½Î»ï¿½Ãµï¿½ÖµÎªe
+	public void set(int index,E e) {
+		if(index < 0 || index >= size)
+			throw new IllegalArgumentException("Set failed. Index is Illegal.");
+		data[index] = e;
+	}
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½Ôªï¿½ï¿½e
+	public boolean contains(E e) {
+		for(int i = 0;i < size;i++) {
+			if(data[i].equals(e))
+				return true;
+		}
+		return false;
+	}
+	//ï¿½é¿´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ôªï¿½ï¿½eï¿½ï¿½ï¿½Úµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ôªï¿½ï¿½eï¿½ï¿½ï¿½ò·µ»ï¿½-1
+	public int find(E e) {
+		for(int i = 0;i < size;i++) {
+			if(data[i].equals(e))
+				return i;
+		}
+		return -1;
+	}
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½indexÎ»ï¿½Ãµï¿½Ôªï¿½Ø£ï¿½ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½Ôªï¿½ï¿½
+	public E remove(int index) {
+		if(index < 0 || index >= size)
+			throw new IllegalArgumentException("Remove failed. Index is Illegal.");
+		E ret = data[index];
+		for(int i = index+1;i < size;i++)
+			data[i - 1] = data[i];
+		size--;
+		data[size] = null;
+		if(size == data.length/4 && data.length/2 != 0)
+			resize(data.length/2);
+		return ret;
+	}
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÎªnewCapacity
+	private void resize(int newCapacity) {
+		E[] newDate = (E[])new Object[newCapacity];
+		for(int i = 0; i < size;i++) {
+			newDate[i] = data[i];
+			data = newDate;
+		}
+	}
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Ôªï¿½Ø£ï¿½ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½Ôªï¿½ï¿½
+	public E removeFirst() {
+		return remove(0);
+	}
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Ôªï¿½Ø£ï¿½ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½ï¿½ï¿½Ôªï¿½ï¿½
+	public E removeLast() {
+		return remove(size-1);
+	}
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½Ôªï¿½ï¿½e
+	public void removeElement(E e) {
+		int index = find(e);
+		if(index != -1)
+			remove(index);
+	}
 	
+	public String toString() {
+		StringBuilder res = new StringBuilder();
+		res.append(String.format("Array:size = %d,capacity = %d\n",size,data.length));
+		res.append('[');
+		for(int i = 0;i < size;i++) {
+			res.append(data[i]);
+			if(i != size - 1)
+				res.append(", ");
+		}
+		res.append(']');
+		return res.toString();
+	}
+
 }
